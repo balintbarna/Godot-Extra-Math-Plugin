@@ -49,10 +49,13 @@ func test_get_vectors_rotation():
         var from = vecs[randi() % 100]
         var to = vecs[randi() % 100]
         var rot = ExtraMath.get_vectors_rotation(from, to)
-        var to_calculated = from.rotated(rot.normalized(), rot.length())
-        var to_calculated_with_basis = Basis(rot.normalized(), rot.length()) * from
-        assert_vecs_almost_eq(to_calculated.normalized(), to.normalized(), ExtraMath.EPSILON)
-        assert_vecs_almost_eq(to_calculated_with_basis.normalized(), to.normalized(), ExtraMath.EPSILON)
+        if rot.length() == 0:
+            assert_vecs_almost_eq(from.normalized(), to.normalized(), ExtraMath.EPSILON)
+        else:
+            var to_calculated = from.rotated(rot.normalized(), rot.length())
+            var to_calculated_with_basis = Basis(rot.normalized(), rot.length()) * from
+            assert_vecs_almost_eq(to_calculated.normalized(), to.normalized(), ExtraMath.EPSILON)
+            assert_vecs_almost_eq(to_calculated_with_basis.normalized(), to.normalized(), ExtraMath.EPSILON)
 
 
 func assert_vecs_almost_eq(got, expected, max_err):
