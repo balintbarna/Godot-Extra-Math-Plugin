@@ -13,6 +13,10 @@ config_version=4
 config/name="Godot-Extra-Math-Plugin"
 config/icon="res://icon.png"
 
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/extra_math_gd/plugin.cfg" )
+
 [physics]
 
 common/enable_pause_aware_picking=true
