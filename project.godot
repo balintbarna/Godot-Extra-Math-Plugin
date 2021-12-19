@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Reference",
+"class": "ExtraMath",
+"language": "GDScript",
+"path": "res://addons/extra_math_gd/ExtraMath.gd"
+} ]
+_global_script_class_icons={
+"ExtraMath": ""
+}
+
 [application]
 
 config/name="Godot-Extra-Math-Plugin"
