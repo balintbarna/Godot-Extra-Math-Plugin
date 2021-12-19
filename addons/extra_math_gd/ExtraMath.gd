@@ -11,14 +11,17 @@ const EULER = 2.7182818284590452353602874714
 const DEFAULT_EULER_ORDER = "yxz"
 
 
+# Convert `int` microseconds to `float` seconds.
 static func usec_to_sec(usec: int):
     return usec / 1000000.0
 
 
+# Convert `float` seconds to `int` microseconds.
 static func sec_to_usec(sec: float):
     return int(sec * 1000000)
 
 
+# Returns the rotation in axis-angle representation, which rotates the direction of the `from` vector to the direction of the `to` vector.
 static func get_vectors_rotation(from: Vector3, to: Vector3) -> Vector3:
     var dot = from.dot(to) # dot = |a|×|b|× cos(fi)
     var cross = from.cross(to) # cross = |a|×|b|× sin(fi) × n
@@ -29,22 +32,26 @@ static func get_vectors_rotation(from: Vector3, to: Vector3) -> Vector3:
     return cross.normalized() * fi
 
 
+# Same as `quat2axis_angle` but for Basises
 static func basis2axis_angle(b: Basis):
     return quat2axis_angle(Quat(b))
 
 
+# Easy way to convert your quaternion rotation to axis-angle representation. The vector length is equal to the amount of rotation in radians.
 static func quat2axis_angle(q: Quat):
     var v = Vector3(q.x, q.y, q.z)
     var angle = 2 * atan2(v.length(), q.w)
     return v.normalized() * angle
 
 
+# Same as `basis2euler` but with a quaternion
 static func quat2euler(q: Quat, order = DEFAULT_EULER_ORDER) -> Vector3:
     return basis2euler(Basis(q), order)
 
 
-# based on https://en.wikipedia.org/wiki/Euler_angles#Rotation_matrix
+# Converts a basis to an Euler representation in the specified rotation order, default order is "yxz".
 static func basis2euler(b: Basis, order = DEFAULT_EULER_ORDER) -> Vector3:
+    # Based on https://en.wikipedia.org/wiki/Euler_angles#Rotation_matrix
     var euler = Vector3()
     if order == "xzy":
         # rot =  cz*cy             -sy             cz*sy
@@ -105,11 +112,12 @@ static func basis2euler(b: Basis, order = DEFAULT_EULER_ORDER) -> Vector3:
     return euler
 
 
+# Same as `euler2basis` but converts to quaternion in one step
 static func euler2quat(angles: Vector3, order = DEFAULT_EULER_ORDER) -> Quat:
         return Quat(euler2basis(angles, order))
 
 
-# xyz values in `angles` vector denote rotation around the respective local axis
+# Calculate the rotation matrix from Euler representation in your specified order. The xyz values in `angles` vector denote rotation around the respective local axis. Default order is "yxz".
 static func euler2basis(angles: Vector3, order = DEFAULT_EULER_ORDER) -> Basis:
     if not (order.length() == 3 and "x" in order and "y" in order and "z" in order):
         push_error("Euler order must contain exactly one of X, Y, and Z axes in lowercase, e.g. 'xyz'. Proper Euler orders, such as 'zxz' are not supported.")
